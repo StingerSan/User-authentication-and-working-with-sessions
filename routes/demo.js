@@ -85,7 +85,7 @@ router.post("/login", async function (req, res) {
   req.session.user = { id: existingUser._id, email: existingUser.email };
   req.session.isAuthenticated = true;
   req.session.save(function () {
-    res.render("admin");
+    res.redirect("/admin");
   });
 });
 
@@ -97,6 +97,10 @@ router.get("/admin", function (req, res) {
   res.render("admin");
 });
 
-router.post("/logout", function (req, res) {});
+router.post("/logout", function (req, res) {
+  req.session.user = null;
+  req.session.isAuthenticated = false;
+  res.redirect("/");
+});
 
 module.exports = router;
