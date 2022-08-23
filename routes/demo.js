@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 
 const db = require("../data/database");
+const { localsName } = require("ejs");
 
 const router = express.Router();
 
@@ -150,25 +151,20 @@ router.post("/login", async function (req, res) {
 
 router.get("/admin", async function (req, res) {
   // if (!req.session.user)
-  if (!req.session.isAuthenticated) {
+  if (!res.locals.isAuth) {
     return res.status(401).render("401");
   }
 
-  const user = await db
-    .getDb()
-    .collection("users")
-    .findOne({ _id: req.session.user.id });
-
-  if (!user || !user.isAdmin);
+  if (!res.locals.isAdmin);
   {
-    res.status(403).render("403");
+    return res.status(403).render("403");
   }
   res.render("admin");
 });
 
 router.get("/profile", function (req, res) {
   // if (!req.session.user)
-  if (!req.session.isAuthenticated) {
+  if (!res.locals.isAuth) {
     return res.status(401).render("401");
   }
   res.render("profile");
